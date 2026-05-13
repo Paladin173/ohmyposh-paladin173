@@ -4,6 +4,7 @@
     {
       "alignment": "right",
       "newline": true,
+      "overflow": "hide",
       "segments": [
         {
           "foreground": "#e4e4e4",
@@ -64,6 +65,7 @@
     },
     {
       "alignment": "left",
+      "newline": true,
       "segments": [
         {
           "foreground": "#61afef",
