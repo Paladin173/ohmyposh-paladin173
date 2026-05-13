@@ -49,8 +49,9 @@ Invoke-WebRequest `
     -Uri "https://raw.githubusercontent.com/Paladin173/ohmyposh-paladin173/main/paladin173.json" `
     -OutFile "$HOME\.poshthemes\paladin173.json"
 
-# Shared profile
-$SharedProfile = "$HOME\Documents\PowerShell\paladin173.ps1"
+# Shared profile location based on actual PowerShell profile path
+$ProfileDirectory = Split-Path $PROFILE
+$SharedProfile = Join-Path $ProfileDirectory "paladin173.ps1"
 
 'oh-my-posh init pwsh --config "$HOME\.poshthemes\paladin173.json" | Invoke-Expression' | Set-Content $SharedProfile
 
@@ -63,11 +64,11 @@ if (-not (Test-Path $PROFILE))
 ". `"$SharedProfile`"" | Set-Content $PROFILE
 
 # Windows PowerShell 5.1 profile
-$WinPSProfile = "$HOME\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+$WinPSProfile = Join-Path ([Environment]::GetFolderPath("MyDocuments")) "WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
 
-if (-not (Test-Path "$HOME\Documents\WindowsPowerShell"))
+if (-not (Test-Path (Split-Path $WinPSProfile)))
 {
-    New-Item -ItemType Directory -Path "$HOME\Documents\WindowsPowerShell" | Out-Null
+    New-Item -ItemType Directory -Path (Split-Path $WinPSProfile) -Force | Out-Null
 }
 
 if (-not (Test-Path $WinPSProfile))
@@ -82,6 +83,7 @@ Write-Host "Theme installed successfully."
 Write-Host "Set Windows Terminal font to: CaskaydiaCove Nerd Font"
 Write-Host "Restart PowerShell or Windows Terminal."
 ```
+
 
 
 Then:
