@@ -68,7 +68,7 @@
         {
           "foreground": "#61afef",
           "style": "plain",
-          "template": "\u256d\u2500 {{ if or (env \"WSL_DISTRO_NAME\") (env \"container\") }}{{ .Location }}{{ else }}{{ .Location | replace \"/\" \"\\\\\" }}{{ end }}",
+          "template": "{{ if or (env \"WSL_DISTRO_NAME\") (env \"container\") }}{{ .Location }}{{ else }}{{ .Location | replace \"/\" \"\\\\\" }}{{ end }}",
           "options": {
             "style": "full"
           },
@@ -103,7 +103,7 @@
         {
           "foreground": "#61afef",
           "style": "plain",
-          "template": "\u2570\u2500 {{ if .Root }}#{{else}}>{{end}}",
+          "template": "{{ if .Root }}#{{else}}>{{end}}",
           "type": "text"
         }
       ],
