@@ -12,22 +12,51 @@
             "always_enabled": true
           },
           "style": "plain",
-          "template": "{{ .FormattedMs }} | ",
+          "template": "{{ .FormattedMs }} ",
           "type": "executiontime"
         },
         {
-          "foreground": "#0087af",
+          "foreground": "#d75f00",
           "style": "plain",
-          "template": "RAM: {{ (div ((sub .PhysicalTotalMemory .PhysicalAvailableMemory)|float64) 1073741824.0) }}/{{ (div .PhysicalTotalMemory 1073741824.0) }}GB ({{ printf \"%.0f\" .PhysicalPercentUsed }}%) | ",
-          "type": "sysinfo"
+          "template": "| {{ .Shell }} on ",
+          "type": "shell"
         },
         {
           "foreground": "#d75f00",
           "options": {
-            "time_format": "15:04:05 CST"
+            "windows": "\ue62a Win",
+            "ubuntu": "\uf31b Ubuntu",
+            "debian": "\uf306 Debian",
+            "linux": "\ue712 Linux",
+            "macos": "\uf179 macOS",
+            "alpine": "\uf300 Alpine",
+            "arch": "\uf303 Arch",
+            "centos": "\uf304 CentOS",
+            "elementary": "\uf309 Elementary",
+            "fedora": "\uf30a Fedora",
+            "gentoo": "\uf30d Gentoo",
+            "manjaro": "\uf312 Manjaro",
+            "mint": "\uf30f Mint",
+            "opensuse": "\uf314 openSUSE",
+            "raspbian": "\uf315 Raspbian"
           },
           "style": "plain",
-          "template": "{{ .CurrentDate | date .Format }} ",
+          "template": "{{ .Icon }} | ",
+          "type": "os"
+        },
+        {
+          "foreground": "#0087af",
+          "style": "plain",
+          "template": "\ue266 {{ (div ((sub .PhysicalTotalMemory .PhysicalAvailableMemory)|float64) 1073741824.0) }}/{{ (div .PhysicalTotalMemory 1073741824.0) }}GB ({{ printf \"%.0f\" .PhysicalPercentUsed }}%) ",
+          "type": "sysinfo"
+        },
+        {
+          "foreground": "#a8a8a8",
+          "options": {
+            "time_format": "15:04:05"
+          },
+          "style": "plain",
+          "template": "| {{ .CurrentDate | date .Format }} ",
           "type": "time"
         }
       ],
@@ -37,35 +66,12 @@
       "alignment": "left",
       "segments": [
         {
-          "foreground": "#d75f00",
-          "options": {
-            "alpine": "Alpine",
-            "arch": "Arch",
-            "centos": "CentOS",
-            "debian": "Debian",
-            "elementary": "Elementary",
-            "fedora": "Fedora",
-            "gentoo": "Gentoo",
-            "linux": "Linux",
-            "macos": "macOS",
-            "manjaro": "Manjaro",
-            "mint": "Mint",
-            "opensuse": "openSUSE",
-            "raspbian": "Raspbian",
-            "ubuntu": "Ubuntu",
-            "windows": "Win"
-          },
+          "foreground": "#61afef",
           "style": "plain",
-          "template": "\u256d\u2500[ {{ .Icon }} ]",
-          "type": "os"
-        },
-        {
-          "foreground": "#e4e4e4",
+          "template": "\u256d\u2500 {{ if or (env \"WSL_DISTRO_NAME\") (env \"container\") }}{{ .Location }}{{ else }}{{ .Location | replace \"/\" \"\\\\\" }}{{ end }}",
           "options": {
             "style": "full"
           },
-          "style": "plain",
-          "template": " {{ .Location | replace \"/\" \"\\\\\" }}",
           "type": "path"
         },
         {
@@ -95,9 +101,9 @@
       "newline": true,
       "segments": [
         {
-          "foreground": "#d75f00",
+          "foreground": "#61afef",
           "style": "plain",
-          "template": "\u2570\u2500 {{ if .Root }}#{{else}}${{end}}",
+          "template": "\u2570\u2500 {{ if .Root }}#{{else}}>{{end}}",
           "type": "text"
         }
       ],
