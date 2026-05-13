@@ -40,23 +40,49 @@ winget install JanDeDobbeleer.OhMyPosh --source winget
 
 oh-my-posh font install CascadiaCode
 
-New-Item -ItemType Directory -Force "$HOME\.poshthemes" | Out-Null
+if (-not (Test-Path "$HOME\.poshthemes"))
+{
+    New-Item -ItemType Directory -Path "$HOME\.poshthemes" | Out-Null
+}
 
 Invoke-WebRequest `
-  -Uri "https://raw.githubusercontent.com/Paladin173/ohmyposh-paladin173/main/paladin173.json" `
-  -OutFile "$HOME\.poshthemes\paladin173.json"
+    -Uri "https://raw.githubusercontent.com/Paladin173/ohmyposh-paladin173/main/paladin173.json" `
+    -OutFile "$HOME\.poshthemes\paladin173.json"
 
-New-Item -Path $PROFILE -ItemType File -Force
+# Shared profile
+$SharedProfile = "$HOME\Documents\PowerShell\paladin173.ps1"
 
-@'
-oh-my-posh init pwsh --config "$HOME\.poshthemes\paladin173.json" | Invoke-Expression
-'@ | Set-Content $PROFILE
+'oh-my-posh init pwsh --config "$HOME\.poshthemes\paladin173.json" | Invoke-Expression' | Set-Content $SharedProfile
+
+# PowerShell 7 profile
+if (-not (Test-Path $PROFILE))
+{
+    New-Item -ItemType File -Path $PROFILE -Force | Out-Null
+}
+
+". `"$SharedProfile`"" | Set-Content $PROFILE
+
+# Windows PowerShell 5.1 profile
+$WinPSProfile = "$HOME\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+
+if (-not (Test-Path "$HOME\Documents\WindowsPowerShell"))
+{
+    New-Item -ItemType Directory -Path "$HOME\Documents\WindowsPowerShell" | Out-Null
+}
+
+if (-not (Test-Path $WinPSProfile))
+{
+    New-Item -ItemType File -Path $WinPSProfile -Force | Out-Null
+}
+
+". `"$SharedProfile`"" | Set-Content $WinPSProfile
 
 Write-Host ""
 Write-Host "Theme installed successfully."
-Write-Host "Set Windows Terminal font to:"
-Write-Host "CaskaydiaCove Nerd Font"
+Write-Host "Set Windows Terminal font to: CaskaydiaCove Nerd Font"
+Write-Host "Restart PowerShell or Windows Terminal."
 ```
+
 
 Then:
 
@@ -82,10 +108,16 @@ https://raw.githubusercontent.com/Paladin173/ohmyposh-paladin173/main/paladin173
 
 echo 'export PATH=$PATH:~/.local/bin' >> ~/.bashrc
 
-echo 'eval "$(oh-my-posh init bash --config ~/.poshthemes/paladin173.json)"' >> ~/.bashrc
+cat > ~/.poshthemes/paladin173.sh << 'EOF'
+eval "$(oh-my-posh init bash --config ~/.poshthemes/paladin173.json)"
+EOF
+
+grep -qxF 'source ~/.poshthemes/paladin173.sh' ~/.bashrc || \
+echo 'source ~/.poshthemes/paladin173.sh' >> ~/.bashrc
 
 exec bash
 ```
+
 
 Then:
 
